@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -160,32 +161,35 @@ namespace A_Star_Algorithm_Virtualization.ViewModels
         }
         private void Start()
         {
-            OpenNodes.Add(StartNode);
-            while (true)
+            Task.Run(() =>
             {
-                Node node = FindLowestCostOpenNode();
-                if(node == null)
+                OpenNodes.Add(StartNode);
+                while (true)
                 {
-                    MessageBox.Show("No routes found!!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-                OpenNodes.Remove(node);
-                Nodes.Remove(node);
-                ClosedNodes.Add(node);
-
-                if (node == EndNode)
-                {
-                    Node track = node.Parent;
-                    //Success
-                    while(track != StartNode)
+                    Node node = FindLowestCostOpenNode();
+                    if (node == null)
                     {
-                        track.IsStartOrEndPoint = true;
-                        track = track.Parent;
+                        MessageBox.Show("No routes found!!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
                     }
-                    return;
+                    OpenNodes.Remove(node);
+                    Nodes.Remove(node);
+                    ClosedNodes.Add(node);
+
+                    if (node == EndNode)
+                    {
+                        Node track = node.Parent;
+                        //Success
+                        while (track != StartNode)
+                        {
+                            track.IsStartOrEndPoint = true;
+                            track = track.Parent;
+                        }
+                        return;
+                    }
+                    EvaluateOpenNodesAround(node);
                 }
-                EvaluateOpenNodesAround(node);
-            }
+            });
         }
         private Node FindLowestCostOpenNode()
         {
@@ -232,6 +236,7 @@ namespace A_Star_Algorithm_Virtualization.ViewModels
                     }
                 }
             }
+            Thread.Sleep(200);
             return nodes;
 
         }
