@@ -1,0 +1,90 @@
+﻿<Window x:Class="A_Star_Algorithm_Virtualization.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:A_Star_Algorithm_Virtualization"
+        mc:Ignorable="d"
+        Title="Fun Time" DataContextChanged="Window_DataContextChanged">
+    <Window.Resources>
+        <Style TargetType="{x:Type ToggleButton}">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border  
+						BorderBrush="Black" 
+						Background="White" 
+                        BorderThickness="1"
+						SnapsToDevicePixels="true" Name="bd" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="text1" HorizontalAlignment="Left" Margin="5,0,0,0" Text="{Binding GValue}" FontSize="12"></TextBlock>
+                                    <TextBlock x:Name="text2" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,5,0" Text="{Binding HValue}" FontSize="12"></TextBlock>
+                                </Grid>
+                                <TextBlock x:Name="text3" Grid.Row="1" HorizontalAlignment="Center" Margin="5,0,0,0" Text="{Binding FValue}" FontSize="16"></TextBlock>
+
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsOpen}" Value="True"/>
+                                    <Condition Binding="{Binding IsStartOrEndPoint}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Background" Value="LimeGreen" TargetName="bd"/>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsClosed}" Value="True"/>
+                                    <Condition Binding="{Binding IsStartOrEndPoint}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Background" Value="Red" TargetName="bd"/>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <DataTrigger Binding="{Binding IsBarrier}" Value="True">
+                                <Setter Property="Background" Value="Black" TargetName="bd"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsStartOrEndPoint}" Value="True">
+                                <Setter Property="Background" Value="Blue" TargetName="bd"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="5*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="5,5,0,0" Grid.Column="0">
+            <TextBlock FontFamily="Helvetica" HorizontalAlignment="Center" FontSize="20"># of Rows</TextBlock>
+            <TextBox Margin="0,10" FontFamily="Helvetica" FontSize="20" Width="50" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Text="{Binding RowCount, StringFormat=D, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBlock FontFamily="Helvetica" Margin="0,20,0,0" FontSize="20" HorizontalAlignment="Center"># of Columns</TextBlock>
+            <TextBox Margin="0,10" FontSize="20" FontFamily="Helvetica" Width="50" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Text="{Binding ColumnCount, StringFormat=D, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Button Command="{Binding StartCommand}" Height="50" Margin="0,50,0,0" HorizontalAlignment="Center" Width="100" FontSize="26" FontFamily="Helvetica" Background="White">START!!</Button>
+            <Button Click="Reset" Height="50" Margin="0,50,0,0" HorizontalAlignment="Center" Width="100" FontSize="26" FontFamily="Helvetica" Background="White">RESET</Button>
+        </StackPanel>
+        <Grid Name="MainGrid" Grid.Column="1"></Grid>
+    </Grid>
+</Window>
